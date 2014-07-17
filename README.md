@@ -1,4 +1,4 @@
-docker-web
+Shipper
 ==========
 
-Shipyard is a web UI for http://docker.io
+Shipper is a web UI for http://docker.io
