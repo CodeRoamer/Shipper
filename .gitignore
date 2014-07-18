@@ -29,10 +29,10 @@ data/
 
 bower_components/
 
-public/
+!*.md
+
+public/css/
 !public/css/client/
-!public/fonts/README.md
-!public/img/
-!public/favicon.png
+public/fonts/
+public/js/
 !public/js/client/
-!public/js/vendor/README.md
