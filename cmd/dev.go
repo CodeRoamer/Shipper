@@ -52,39 +52,54 @@ func runDev(*cli.Context) {
 		log.Fatal("Error Creating script.js in public/js/vendor: %s", err.Error())
 	}
 
+	foundationFile, err := os.Create(filepath.Join(jsVendorDir, "foundation.js"))
+	defer foundationFile.Close()
+
+	if err != nil {
+		log.Fatal("Error Creating foundation.js in public/js/vendor: %s", err.Error())
+	}
+
+	// jquery
 	writeToFile(filepath.Join(bowerDir, "jquery/dist","jquery.js"), file)
-	writeToFile(filepath.Join(bowerDir, "validator-js","validator.js"), file)
+	// other assets
 	writeToFile(filepath.Join(bowerDir, "nprogress","nprogress.js"), file)
-	writeToFile(filepath.Join(bowerDir, "modernizr","modernizr.js"), file)
-	writeToFile(filepath.Join(bowerDir, "lodash/dist","lodash.underscore.js"), file)
 	writeToFile(filepath.Join(bowerDir, "loader.js","loader.js"), file)
 	writeToFile(filepath.Join(bowerDir, "keymaster","keymaster.js"), file)
-	writeToFile(filepath.Join(bowerDir, "jquery-placeholder","jquery.placeholder.js"), file)
 	writeToFile(filepath.Join(bowerDir, "jquery-file-upload/js","jquery.fileupload.js"), file)
-	writeToFile(filepath.Join(bowerDir, "jquery.cookie","jquery.cookie.js"), file)
 	writeToFile(filepath.Join(bowerDir, "ic-ajax/dist/globals","main.js"), file)
-	writeToFile(filepath.Join(bowerDir, "handlebars","handlebars.js"), file)
-	writeToFile(filepath.Join(bowerDir, "fastclick/lib","fastclick.js"), file)
 	writeToFile(filepath.Join(bowerDir, "codemirror/lib","codemirror.js"), file)
 	writeToFile(filepath.Join(bowerDir, "codemirror/addon/mode","overlay.js"), file)
 	writeToFile(filepath.Join(bowerDir, "codemirror/mode/markdown","markdown.js"), file)
 	writeToFile(filepath.Join(bowerDir, "codemirror/mode/gfm","gfm.js"), file)
 	writeToFile(filepath.Join(bowerDir, "showdown/src","showdown.js"), file)
 	writeToFile(filepath.Join(bowerDir, "Countable","Countable.js"), file)
+	// ember and functional framework
+	writeToFile(filepath.Join(bowerDir, "validator-js","validator.js"), file)
+	writeToFile(filepath.Join(bowerDir, "lodash/dist","lodash.underscore.js"), file)
+	writeToFile(filepath.Join(bowerDir, "handlebars","handlebars.js"), file)
 	writeToFile(filepath.Join(bowerDir, "ember","ember.js"), file)
 	writeToFile(filepath.Join(bowerDir, "ember-data","ember-data.js"), file)
 	writeToFile(filepath.Join(bowerDir, "ember-resolver/dist","ember-resolver.js"), file)
 	writeToFile(filepath.Join(bowerDir, "ember-load-initializers","ember-load-initializers.js"), file)
-	writeToFile(filepath.Join(bowerDir, "foundation/js","foundation.js"), file)
+	// foundation framework
+	writeToFile(filepath.Join(bowerDir, "fastclick/lib","fastclick.js"), foundationFile)
+	writeToFile(filepath.Join(bowerDir, "jquery-placeholder","jquery.placeholder.js"), foundationFile)
+	writeToFile(filepath.Join(bowerDir, "jquery.cookie","jquery.cookie.js"), foundationFile)
+	writeToFile(filepath.Join(bowerDir, "foundation/js","foundation.js"), foundationFile)
+
 	copyToFolder(filepath.Join(bowerDir, "nprogress", "nprogress.css"), filepath.Join(cssDir, "nprogress.css"))
 	copyToFolder(filepath.Join(bowerDir, "fontawesome/css", "font-awesome.css"), filepath.Join(cssDir, "font-awesome.css"))
 	copyToFolder(filepath.Join(bowerDir, "foundation/css", "foundation.css"), filepath.Join(cssDir, "foundation.css"))
+	copyToFolder(filepath.Join(bowerDir, "foundation/css", "foundation.css.map"), filepath.Join(cssDir, "foundation.css.map"))
 	copyToFolder(filepath.Join(bowerDir, "foundation/css", "normalize.css"), filepath.Join(cssDir, "normalize.css"))
+	copyToFolder(filepath.Join(bowerDir, "foundation/css", "normalize.css.map"), filepath.Join(cssDir, "normalize.css.map"))
 	copyToFolder(filepath.Join(bowerDir, "fontawesome/fonts", "FontAwesome.otf"), filepath.Join(fontsDir, "FontAwesome.otf"))
 	copyToFolder(filepath.Join(bowerDir, "fontawesome/fonts", "fontawesome-webfont.eot"), filepath.Join(fontsDir, "fontawesome-webfont.eot"))
 	copyToFolder(filepath.Join(bowerDir, "fontawesome/fonts", "fontawesome-webfont.svg"), filepath.Join(fontsDir, "fontawesome-webfont.svg"))
 	copyToFolder(filepath.Join(bowerDir, "fontawesome/fonts", "fontawesome-webfont.ttf"), filepath.Join(fontsDir, "fontawesome-webfont.ttf"))
 	copyToFolder(filepath.Join(bowerDir, "fontawesome/fonts", "fontawesome-webfont.woff"), filepath.Join(fontsDir, "fontawesome-webfont.woff"))
+	copyToFolder(filepath.Join(bowerDir, "modernizr","modernizr.js"), filepath.Join(jsVendorDir, "modernizr.js"))
+
 
 	log.Trace("\nDev Config Complete!")
 }

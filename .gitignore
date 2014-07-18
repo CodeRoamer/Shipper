@@ -33,4 +33,6 @@ public/
 !public/css/client/
 !public/fonts/README.md
 !public/img/
+!public/favicon.png
 !public/js/client/
+!public/js/vendor/README.md
