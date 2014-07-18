@@ -10,6 +10,8 @@ import (
 
 	"github.com/Unknwon/goconfig"
 	"github.com/Unknwon/com"
+	"github.com/gogits/cache"
+	"github.com/gogits/session"
 
 	"github.com/coderoamer/shipper/modules/log"
 )

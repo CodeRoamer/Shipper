@@ -3,7 +3,7 @@ package log
 import (
 	"os"
 
-	"github.com/astaxie/beego/logs"
+	"github.com/gogits/logs"
 )
 
 var (
