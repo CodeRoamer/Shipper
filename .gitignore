@@ -26,3 +26,11 @@ _testmain.go
 
 log/
 data/
+
+bower_components/
+
+public/
+!public/css/client/
+!public/fonts/README.md
+!public/img/
+!public/client/
