@@ -7,15 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shipper: Docker Web UI written in GO</title>
 
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <link rel="stylesheet" href="css/nprogress.css">
     <!-- If you are using the CSS version, only link these 2 files, you may add app.css to use for your overrides if you like -->
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/foundation.css">
-    <link rel="stylesheet" href="css/font-awesome.css">
 
     <!-- If you are using the gem version, you need this only -->
     <link rel="stylesheet" href="css/client/app.css">
-
-    <script src="js/modernizr.js"></script>
 
 </head>
 <body>
@@ -80,13 +79,7 @@
 
 {{ yield }}
 
-<script src="js/jquery.js"></script>
-<script src="js/jquery.cookie.js"></script>
-<script src="js/foundation.min.js"></script>
-<script src="js/ember.js"></script>
-<script src="js/handlebars.js"></script>
-<script src="js/fastclick.js"></script>
-<script src="js/placeholder.js"></script>
+<script src="js/vendor/script.js"></script>
 <script>
     $(document).foundation({
         reveal : {

@@ -10,7 +10,8 @@ Shipper is a web UI for http://docker.io
 
 > more wiki on the road, project is still underdeveloped.
 
-1. `go get github.com/coderoamer/shipper`
+1. `go get github.com/coderoamer/shipper` - download shipper into your *$GOPATH*
 2. `cd $GOPATH/src/github.com/coderoamer/shipper`
-3. `go build`
-4. `shipper web` to kick off your web app
+3. `go build` - build shipper
+4. `shipper dev` - download assets & put them into the right place
+5. `shipper web` - to kick off your web app
