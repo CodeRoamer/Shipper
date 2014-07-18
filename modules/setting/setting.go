@@ -10,8 +10,9 @@ import (
 
 	"github.com/Unknwon/goconfig"
 	"github.com/Unknwon/com"
-	"github.com/gogits/cache"
-	"github.com/gogits/session"
+
+	"github.com/coderoamer/cache"
+	"github.com/coderoamer/session"
 
 	"github.com/coderoamer/shipper/modules/log"
 )
@@ -19,7 +20,7 @@ import (
 type Scheme string
 
 const (
-	HTTP Scheme = "http"
+	HTTP Scheme  = "http"
 	HTTPS Scheme = "https"
 )
 
@@ -72,6 +73,7 @@ var (
 
 	// Global setting objects.
 	Cfg        *goconfig.ConfigFile
+	CustomPath string // Custom directory path.
 	ProdMode   bool
 	RunUser    string
 )
@@ -103,14 +105,23 @@ func NewConfigContext() {
 		log.Fatal("Fail to get work directory: %v", err)
 	}
 
-	cfgPath := path.Join(workDir, "conf/app.ini")
+	CustomPath = os.Getenv("SHIPPER_CUSTOM")
+	// no custom path, use gopath instead
+	if len(CustomPath) == 0 {
+		CustomPath = path.Join(os.Getenv("GOPATH"),"bin")
+	}
+
+	cfgPath := path.Join(CustomPath, "conf/app.ini")
+
+	log.Trace("Setting File Path: "+cfgPath)
+
 	if com.IsFile(cfgPath) {
 		Cfg, err = goconfig.LoadConfigFile(cfgPath)
 		if err != nil {
 			log.Fatal("Fail to load 'conf/app.ini': %v", err)
 		}
 	} else {
-		log.Warn("No 'conf/app.ini' found")
+		log.Fatal("No 'conf/app.ini' found, Shipper Exit...")
 	}
 
 	AppName = Cfg.MustValue("", "APP_NAME", "Shipper: Docker Web UI written in GO")
@@ -161,8 +172,7 @@ var Service struct {
 		EnableReverseProxyAuth bool
 		ActiveCodeLives        int
 		ResetPwdCodeLives      int
-}
-
+	}
 
 func newService() {
 	Service.ActiveCodeLives = Cfg.MustInt("service", "ACTIVE_CODE_LIVE_MINUTES", 180)
@@ -181,7 +191,6 @@ var logLevels = map[string]string{
 	"Error":    "4",
 	"Critical": "5",
 }
-
 
 func newLogService() {
 	log.Info("%s %s", AppName, AppVer)
@@ -209,7 +218,7 @@ func newLogService() {
 		case "console":
 			LogConfigs[i] = fmt.Sprintf(`{"level":%s}`, level)
 		case "file":
-			logPath := Cfg.MustValue(modeSec, "FILE_NAME", path.Join(LogRootPath, "gogs.log"))
+			logPath := Cfg.MustValue(modeSec, "FILE_NAME", path.Join(LogRootPath, "shipper.log"))
 			os.MkdirAll(path.Dir(logPath), os.ModePerm)
 			LogConfigs[i] = fmt.Sprintf(
 				`{"level":%s,"filename":"%s","rotate":%v,"maxlines":%d,"maxsize":%d,"daily":%v,"maxdays":%d}`, level,
@@ -231,11 +240,60 @@ func newLogService() {
 }
 
 func newCacheService() {
+	CacheAdapter = Cfg.MustValueRange("cache", "ADAPTER", "memory", []string{"memory", "redis", "memcache"})
+	if EnableRedis {
+		log.Info("Redis Enabled")
+	}
+	if EnableMemcache {
+		log.Info("Memcache Enabled")
+	}
 
+	switch CacheAdapter {
+	case "memory":
+		CacheConfig = fmt.Sprintf(`{"interval":%d}`, Cfg.MustInt("cache", "INTERVAL", 60))
+	case "redis", "memcache":
+		CacheConfig = fmt.Sprintf(`{"conn":"%s"}`, Cfg.MustValue("cache", "HOST"))
+	default:
+		log.Fatal("Unknown cache adapter: %s", CacheAdapter)
+	}
+
+	var err error
+	Cache, err = cache.NewCache(CacheAdapter, CacheConfig)
+	if err != nil {
+		log.Fatal("Init cache system failed, adapter: %s, config: %s, %v\n",
+			CacheAdapter, CacheConfig, err)
+	}
+
+	log.Info("Cache Service Enabled")
 }
 
 func newSessionService() {
+	SessionProvider = Cfg.MustValueRange("session", "PROVIDER", "memory",
+		[]string{"memory", "file", "redis", "mysql"})
 
+	SessionConfig = new(session.Config)
+	SessionConfig.ProviderConfig = Cfg.MustValue("session", "PROVIDER_CONFIG")
+	SessionConfig.CookieName = Cfg.MustValue("session", "COOKIE_NAME", "i_like_shipper")
+	SessionConfig.Secure = Cfg.MustBool("session", "COOKIE_SECURE")
+	SessionConfig.EnableSetCookie = Cfg.MustBool("session", "ENABLE_SET_COOKIE", true)
+	SessionConfig.Gclifetime = Cfg.MustInt64("session", "GC_LIFE_TIME", 86400)
+	SessionConfig.Maxlifetime = Cfg.MustInt64("session", "MAX_LIFE_TIME", 86400)
+	SessionConfig.SessionIDHashFunc = Cfg.MustValueRange("session", "SESSION_ID_HASHFUNC",
+		"sha1", []string{"sha1", "sha256", "md5"})
+	SessionConfig.SessionIDHashKey = Cfg.MustValue("session", "SESSION_ID_HASHKEY")
+
+	if SessionProvider == "file" {
+		os.MkdirAll(path.Dir(SessionConfig.ProviderConfig), os.ModePerm)
+	}
+
+	var err error
+	SessionManager, err = session.NewManager(SessionProvider, *SessionConfig)
+	if err != nil {
+		log.Fatal("Init session system failed, provider: %s, %v",
+			SessionProvider, err)
+	}
+	go SessionManager.GC()
+	log.Info("Session Service Enabled")
 }
 
 func newMailService() {
@@ -251,7 +309,8 @@ func newNotifyMailService() {
 }
 
 func newWebhookService() {
-
+	WebhookTaskInterval = Cfg.MustInt("webhook", "TASK_INTERVAL", 1)
+	WebhookDeliverTimeout = Cfg.MustInt("webhook", "DELIVER_TIMEOUT", 5)
 }
 
 func NewServices() {

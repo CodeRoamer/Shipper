@@ -1,0 +1,16 @@
+[target]
+path = github.com/coderoamer/shipper
+
+[deps]
+github.com/Unknwon/com = `commit:019c36f`
+github.com/Unknwon/goconfig = `commit:c4e325f`
+github.com/codegangsta/cli = `commit:bb91895`
+github.com/go-martini/martini = `commit:49411a5`
+github.com/go-sql-driver/mysql = `commit:b44cac6`
+github.com/go-xorm/core = `commit:267e375`
+github.com/go-xorm/xorm = `commit:bd1487b`
+github.com/lib/pq = `commit:529edd9`
+
+[res]
+include = templates|public
+

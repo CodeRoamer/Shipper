@@ -27,6 +27,7 @@ var (
 	UseSQLite3    bool
 )
 
+// if we have more models, append here
 func init() {
 	tables = append(tables, new(User))
 }

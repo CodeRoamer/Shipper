@@ -3,7 +3,8 @@ package log
 import (
 	"os"
 
-	"github.com/gogits/logs"
+	"github.com/coderoamer/logs"
+	"github.com/fatih/color"
 )
 
 var (
@@ -36,37 +37,61 @@ func NewLogger(bufLen int64, mode, config string) {
 
 func Trace(format string, v ...interface{}) {
 	for _, logger := range loggers {
-		logger.Trace(format, v...)
+		if logger.Adapter == "console" {
+			color.White(format, v...)
+		} else {
+			logger.Trace(format, v...)
+		}
 	}
 }
 
 func Debug(format string, v ...interface{}) {
 	for _, logger := range loggers {
-		logger.Debug(format, v...)
+		if logger.Adapter == "console" {
+			color.Yellow(format, v...)
+		} else {
+			logger.Debug(format, v...)
+		}
 	}
 }
 
 func Info(format string, v ...interface{}) {
 	for _, logger := range loggers {
-		logger.Info(format, v...)
+		if logger.Adapter == "console" {
+			color.Green(format, v...)
+		} else {
+			logger.Info(format, v...)
+		}
 	}
 }
 
 func Error(format string, v ...interface{}) {
 	for _, logger := range loggers {
-		logger.Error(format, v...)
+		if logger.Adapter == "console" {
+			color.Red(format, v...)
+		} else {
+			logger.Error(format, v...)
+		}
 	}
 }
 
 func Warn(format string, v ...interface{}) {
 	for _, logger := range loggers {
-		logger.Warn(format, v...)
+		if logger.Adapter == "console" {
+			color.Yellow(format, v...)
+		} else {
+			logger.Warn(format, v...)
+		}
 	}
 }
 
 func Critical(format string, v ...interface{}) {
 	for _, logger := range loggers {
-		logger.Critical(format, v...)
+		if logger.Adapter == "console" {
+			color.Red(format, v...)
+		} else {
+			logger.Critical(format, v...)
+		}
 	}
 }
 

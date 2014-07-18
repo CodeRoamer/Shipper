@@ -26,16 +26,17 @@ func checkRunMode() {
 func GlobalInit() {
 	setting.NewConfigContext()
 	log.Trace("Log path: %s", setting.LogRootPath)
-
+	models.LoadModelsConfig()
 	setting.NewServices()
 
-	if setting.InstallLock {
-		if err := models.NewEngine(); err != nil {
-			log.Fatal("Fail to initialize ORM engine: %v", err)
-		}
-
-		models.HasEngine = true
+	if err := models.NewEngine(); err != nil {
+		log.Fatal("Fail to initialize ORM engine: %v", err)
 	}
+
+	models.HasEngine = true
+//	if setting.InstallLock {
+//
+//	}
 
 	if models.EnableSQLite3 {
 		log.Info("SQLite3 Enabled")

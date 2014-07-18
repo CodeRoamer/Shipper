@@ -1,0 +1,10 @@
+filesets:
+    includes:
+        - templates
+        - public
+        - LICENSE
+        - README.md
+        - start.bat
+        - start.sh
+    excludes:
+        - \.git
