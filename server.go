@@ -1,9 +1,24 @@
 package main
 
 import (
-	"fmt"
+	"os"
+
+	"github.com/codegangsta/cli"
+
+	"github.com/coderoamer/shipper/cmd"
 )
 
+const APP_VER = "0.1.0"
+
 func main() {
-	fmt.Printf("Hello world!")
+	app := cli.NewApp()
+	app.Name = "Shipper"
+	app.Usage = "Docker Web UI written in GO"
+	app.Version = APP_VER
+	app.Commands = []cli.Command{
+		cmd.CmdWeb,
+	}
+
+	app.Flags = append(app.Flags, []cli.Flag{}...)
+	app.Run(os.Args)
 }
