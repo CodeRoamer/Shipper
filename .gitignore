@@ -34,5 +34,5 @@ bower_components/
 public/css/
 !public/css/client/
 public/fonts/
-public/js/
-!public/js/client/
+public/js/vendor/
+!public/js/vendor/README.md
