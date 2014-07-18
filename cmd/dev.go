@@ -45,6 +45,19 @@ func runDev(*cli.Context) {
 	fontsDir := path.Join(publicDir, "fonts")
 	cssDir := path.Join(publicDir, "css")
 
+	err = os.Mkdir(jsVendorDir, os.ModePerm)
+	if err != nil && os.IsNotExist(err){
+		log.Fatal("Error Make Folder public/js/vendor: %s", err.Error())
+	}
+	err = os.Mkdir(fontsDir, os.ModePerm)
+	if err != nil && os.IsNotExist(err) {
+		log.Fatal("Error Make Folder public/fonts: %s", err.Error())
+	}
+	err = os.Mkdir(cssDir, os.ModePerm)
+	if err != nil && os.IsNotExist(err) {
+		log.Fatal("Error Make Folder public/css: %s", err.Error())
+	}
+
 	file, err := os.Create(filepath.Join(jsVendorDir, "script.js"))
 	defer file.Close()
 
