@@ -39,9 +39,9 @@ func runTest(ctx *cli.Context) {
 func conditionalTest(pkg string, bench bool) {
 	var cmd *exec.Cmd
 	if bench {
-		cmd = exec.Command("go","test","-bench=.",pkg)
+		cmd = exec.Command("go","test","-v","-bench=.",pkg)
 	} else {
-		cmd = exec.Command("go","test",pkg)
+		cmd = exec.Command("go","test","-v",pkg)
 	}
 
 	var (
