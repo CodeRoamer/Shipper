@@ -15,3 +15,14 @@ Shipper is a web UI for http://docker.io
 3. `go build` - build shipper
 4. `shipper dev` - download assets & put them into the right place
 5. `shipper web` - to kick off your web app
+
+### For Developers
+
+Run `shipper test` to run unit test.
+
+With flag `-b true` to run benchmark test, like this:
+`shipper test -b true`
+
+### Help
+
+type `shipper` to get help
